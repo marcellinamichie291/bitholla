@@ -1,0 +1,27 @@
+{
+  "name": "bitholla",
+  "version": "1.0.0",
+  "description": "Node application that gets and collect the price of Bitcoin from Binance, Bitmex, and Bitstamp and stores them in a csv file",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "export NODE_ENV=test && jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandonkimmmm/bitholla.git"
+  },
+  "author": "Brandon Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brandonkimmmm/bitholla/issues"
+  },
+  "homepage": "https://github.com/brandonkimmmm/bitholla#readme",
+  "devDependencies": {
+    "jasmine": "^3.3.1"
+  },
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "request": "^2.88.0"
+  }
+}

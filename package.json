@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/brandonkimmmm/bitholla#readme",
   "devDependencies": {
+    "async-csv": "^2.0.0",
+    "csv-parse": "^4.3.3",
     "jasmine": "^3.3.1"
   },
   "dependencies": {

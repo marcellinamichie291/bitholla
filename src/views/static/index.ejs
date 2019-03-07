@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pusher Test</title>
+        <script src='https://js.pusher.com/4.4/pusher.min.js'></script>
+        <script>
+            Pusher.logToConsole = true;
+
+            let pusher = new Pusher('de504dc5763aeef9ff52')
+            let bitstamp = document.getElementById('bitstamp');
+
+            const channel = pusher.subscribe('live_trades');
+            channel.bind('trade', function(data) {
+                bitstamp = JSON.stringify(data)
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Pusher Test</h1>
+        <p id='bitstamp'></p>
+    </body>
+</html>

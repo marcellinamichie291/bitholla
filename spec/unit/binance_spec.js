@@ -1,11 +1,10 @@
 const fs = require('fs');
 const parse = require('csv-parse');
 const moment = require('moment');
-const BitMEXClient = require('bitmex-realtime-api');
-const client = new BitMEXClient();
+const binance = require('node-binance-api')();
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
-describe('bitmex websocket', () => {
+describe('binance websocket', () => {
     let csvWriter;
 
     beforeEach((done) => {
@@ -21,22 +20,23 @@ describe('bitmex websocket', () => {
         done();
     });
 
-    it('should connect to bitmex websocket and listen for new trade events and then record data to price.csv', (done) => {
-        client.addStream('XBTUSD', 'trade', (data) => {
+    it('should connect to binance websocket and listen for new trade events and then record data to price.csv', (done) => {
+        binance.websockets.trades('BTCUSDT', (data) => {
+            let {e:eventType, E:eventTime, s:symbol, p:price, q:quantity, m:maker, a:tradeId} = data;
             csvWriter
                 .writeRecords([
-                    {'exchange': 'Bitmex', 'utc': moment(data[data.length - 1].timestamp).format('MMM Do, h:mm:ss a'), 'price': data[data.length - 1].price, 'timestamp': moment(data[data.length - 1].timestamp).valueOf()}
+                    {'exchange': 'Binance', 'utc': moment.utc(data.E * 1000).format('MMM Do, h:mm:ss a'), 'price': parseFloat(data.p), 'timestamp': data.E}
                 ])
                 .then(() => {
                     expect(typeof data).toBe('object');
-                    expect(JSON.stringify(data)).toContain('price');
-                    expect(JSON.stringify(data)).toContain('timestamp');
+                    expect(JSON.stringify(data)).toContain('E');
+                    expect(JSON.stringify(data)).toContain('p');
                     fs.readFile('./price.csv', function(err, fileData) {
                         parse(fileData, {columns: false, trim: true}, function(err, rows) {
                             expect(rows[0]).toEqual(['EXCHANGE', 'UTC TIME', 'PRICE', 'TIMESTAMP']);
-                            expect(rows[1]).toContain(moment(data[data.length - 1].timestamp).format('MMM Do, h:mm:ss a').toString());
-                            expect(rows[1]).toContain(data[data.length - 1].price.toString());
-                            expect(rows[1]).toContain(moment(data[data.length - 1].timestamp).valueOf().toString());
+                            expect(rows[1]).toContain(moment.utc(data.E * 1000).format('MMM Do, h:mm:ss a').toString());
+                            expect(rows[1]).toContain(parseFloat(data.p).toString());
+                            expect(rows[1]).toContain(data.E.toString());
                             done();
                         });
                     });

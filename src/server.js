@@ -48,6 +48,22 @@ client.addStream('XBTUSD', 'trade', (data) => {
         })
 })
 
+// initialize binance websocket
+const binance = require('node-binance-api')();
+
+// listen to binance websocket for trade events
+binance.websockets.trades('BTCUSDT', (data) => {
+    let {e:eventType, E:eventTime, s:symbol, p:price, q:quantity, m:maker, a:tradeId} = data;
+    csvWriter
+        // record UTC time, price, and timestamp to price.csv
+        .writeRecords([
+            {'exchange': 'Binance', 'utc': moment.utc(data.E * 1000).format('MMM Do, h:mm:ss a'), 'price': parseFloat(data.p), 'timestamp': data.E}
+        ])
+        .then(() => {
+            console.log('Binance data recorded');
+        })
+})
+
 server.listen(3000);
 
 app.use('/', (req, res, next) => {

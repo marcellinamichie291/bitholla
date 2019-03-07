@@ -8,6 +8,7 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvWriter = createCsvWriter({
     path: './price.csv',
     header: [
+        {id: 'exchange', title: 'EXCHANGE'},
         {id: 'utc', title: 'UTC TIME'},
         {id: 'price', title: 'PRICE'},
         {id: 'timestamp', title: 'TIMESTAMP'}
@@ -24,10 +25,26 @@ channel.bind('trade', (data) => {
     csvWriter
         // record UTC time, price, and timestamp to price.csv
         .writeRecords([
-            {'utc': moment.utc(data.timestamp * 1000).format('MMM Do, h:mm:ss a'), 'price': data.price_str, 'timestamp': data.timestamp}
+            {'exchange': 'Bitstamp', 'utc': moment.utc(data.timestamp * 1000).format('MMM Do, h:mm:ss a'), 'price': data.price_str, 'timestamp': data.timestamp}
         ])
         .then(() => {
-            console.log('csv file was written');
+            console.log('Bitstamp data recorded');
+        })
+})
+
+// initialize bitmex websocket
+const BitMEXClient = require('bitmex-realtime-api');
+const client = new BitMEXClient();
+
+// listen to bitmex websocket for trade events
+client.addStream('XBTUSD', 'trade', (data) => {
+    csvWriter
+        // record UTC time, price, and timestamp to price.csv
+        .writeRecords([
+            {'exchange': 'Bitmex', 'utc': moment(data[data.length - 1].timestamp).format('MMM Do, h:mm:ss a'), 'price': data[data.length - 1].price, 'timestamp': moment(data[data.length - 1].timestamp).valueOf()}
+        ])
+        .then(() => {
+            console.log('Bitmex data recorded');
         })
 })
 

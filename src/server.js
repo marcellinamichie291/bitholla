@@ -4,6 +4,8 @@ const server = http.createServer(app);
 const Pusher = require('pusher-js/node');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const moment = require('moment');
+
+// initialize csv-writer and create headers
 const csvWriter = createCsvWriter({
     path: './price.csv',
     header: [
@@ -13,12 +15,14 @@ const csvWriter = createCsvWriter({
     ]
 });
 
+// initalize pusher and subscribe to bitstamp websocket
 let pusher = new Pusher('de504dc5763aeef9ff52');
-
 let channel = pusher.subscribe('live_trades');
+
+// listen to bistamp websocket for trade events
 channel.bind('trade', (data) => {
-    console.log(typeof data.timestamp)
     csvWriter
+        // record UTC time, price, and timestamp to price.csv
         .writeRecords([
             {'utc': moment.utc(data.timestamp * 1000).format('MMM Do, h:mm:ss a'), 'price': data.price_str, 'timestamp': data.timestamp}
         ])

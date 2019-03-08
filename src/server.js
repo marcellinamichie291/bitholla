@@ -3,6 +3,9 @@ const http = require('http');
 const server = http.createServer(app);
 const moment = require('moment');
 
+// initialize binance websocket
+const binance = require('node-binance-api')();
+
 // initialize csv-writer and create headers
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvWriter = createCsvWriter({
@@ -14,6 +17,22 @@ const csvWriter = createCsvWriter({
         {id: 'timestamp', title: 'TIMESTAMP'}
     ]
 });
+
+// // initialize bitmex websocket
+// const BitMEXClient = require('bitmex-realtime-api');
+// const client = new BitMEXClient();
+
+// // listen to bitmex websocket for trade events
+// client.addStream('XBTUSD', 'trade', (data) => {
+//     csvWriter
+//         // record UTC time, price, and timestamp to price.csv
+//         .writeRecords([
+//             {'exchange': 'Bitmex', 'utc': moment(data[data.length - 1].timestamp).format('MMM Do, h:mm:ss a'), 'price': data[data.length - 1].price, 'timestamp': moment(data[data.length - 1].timestamp).valueOf()}
+//         ])
+//         .then(() => {
+//             console.log('Bitmex data recorded');
+//         })
+// })
 
 // // initalize pusher and subscribe to bitstamp websocket
 // const Pusher = require('pusher-js/node');
@@ -32,44 +51,26 @@ const csvWriter = createCsvWriter({
 //         })
 // })
 
-// // initialize bitmex websocket
-// const BitMEXClient = require('bitmex-realtime-api');
-// const client = new BitMEXClient();
-
-// // listen to bitmex websocket for trade events
-// client.addStream('XBTUSD', 'trade', (data) => {
-//     csvWriter
-//         // record UTC time, price, and timestamp to price.csv
-//         .writeRecords([
-//             {'exchange': 'Bitmex', 'utc': moment(data[data.length - 1].timestamp).format('MMM Do, h:mm:ss a'), 'price': data[data.length - 1].price, 'timestamp': moment(data[data.length - 1].timestamp).valueOf()}
-//         ])
-//         .then(() => {
-//             console.log('Bitmex data recorded');
-//         })
-// })
-
-// // initialize binance websocket
-// const binance = require('node-binance-api')();
-
-// // listen to binance websocket for trade events
-// binance.websockets.trades('BTCUSDT', (data) => {
-//     let {e:eventType, E:eventTime, s:symbol, p:price, q:quantity, m:maker, a:tradeId} = data;
-//     csvWriter
-//         // record UTC time, price, and timestamp to price.csv
-//         .writeRecords([
-//             {'exchange': 'Binance', 'utc': moment.utc(data.E * 1000).format('MMM Do, h:mm:ss a'), 'price': parseFloat(data.p), 'timestamp': data.E}
-//         ])
-//         .then(() => {
-//             console.log('Binance data recorded');
-//         })
-// })
-
 server.listen(3000);
 
-// listen on every connection
+// connect to socket.io and listen on every price change
 const io = require('socket.io')(server);
 io.on('connection', (socket) => {
     console.log('SOCKET.IO CONNECTED');
+
+    // listen to binance websocket for trade events
+    binance.websockets.trades('BTCUSDT', (data) => {
+        let {e:eventType, E:eventTime, s:symbol, p:price, q:quantity, m:maker, a:tradeId} = data;
+        csvWriter
+            // record UTC time, price, and timestamp to price.csv
+            .writeRecords([
+                {'exchange': 'Binance', 'utc': moment.utc(data.E * 1000).format('MMM Do, h:mm:ss a'), 'price': parseFloat(data.p), 'timestamp': data.E}
+            ])
+            .then(() => {
+                socket.emit('binance_change', data.p);
+                console.log('Binance data recorded');
+            })
+    })
 })
 
 app.use('/', (req, res, next) => {

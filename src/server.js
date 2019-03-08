@@ -80,6 +80,10 @@ app.use('/', (req, res, next) => {
     res.render('static/index');
 })
 
+app.get('/download/csv.price', (req, res, next) => {
+    res.download(__dirname + '../price.csv', 'price.csv');
+})
+
 server.on('listening', () => {
     console.log('server is listening for requests on port 3000');
 })

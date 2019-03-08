@@ -1,0 +1,16 @@
+.container {
+    margin-top: 50px;
+}
+
+.cards {
+    margin-top: 30px;
+}
+
+.card {
+    height: 400px;
+    margin-bottom: 30px;
+}
+
+.card-subtitle {
+    font-size: 15px;
+}

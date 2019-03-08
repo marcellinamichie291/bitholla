@@ -2,7 +2,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
-        <title>bitHolla</title>
+        <title>csvHolla</title>
+        <link rel='stylesheet' href='/app.css'>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     </head>
@@ -12,43 +13,43 @@
                 <div class='col-12'>
                     <div class='jumbotron'>
                         <h1 class='display-4'>csvHolla</h1>
-                        <a class='btn btn-primary btn-lg' href='#' role='button'>Download file</a>
+                        <a class='btn btn-primary btn-lg' target="_blank" href='/download/price.csv' role='button'>Download file</a>
                     </div>
                 </div>
             </div>
-            <div class='row'>
-                <div class='col-4'>
+            <div class='row cards'>
+                <div class='col-md-4 col-sm-12'>
                     <div class='card'>
                         <div class='card-body'>
                             <h5 class='card-title'>Binance</h5>
                             <h6 class='card-subtitle'>
                                 Binance is a global cryptocurrency exchange that provides a platform for trading more than 100 cryptocurrencies. Since early 2018, Binance is considered as the biggest cryptocurrency exchange in the world in terms of trading volume.
                             </h6>
-                            <p id='binancePrice' class='card-text'>Description</p>
+                            <p id='binancePrice' class='card-text btn btn-info'>0</p>
                             <a href='#' class='card-link'>Download File</a>
                         </div>
                     </div>
                 </div>
-                <div class='col-4'>
+                <div class='col-md-4 col-sm-12'>
                     <div class='card'>
                         <div class='card-body'>
                             <h5 class='card-title'>BitMEX</h5>
                             <h6 class='card-subtitle'>
                                 BitMEX is a cryptocurrency exchange and derivative trading platform. It is owned and operated by HDR Global Trading Limited, which is registered in the Seychelles and has offices worldwide.
                             </h6>
-                            <p id='bitmexPrice' class='card-text'>Description</p>
+                            <p id='bitmexPrice' class='card-text'>0</p>
                             <a href='#' class='card-link'>Download File</a>
                         </div>
                     </div>
                 </div>
-                <div class='col-4'>
+                <div class='col-md-4 col-sm-12'>
                     <div class='card'>
                         <div class='card-body'>
-                            <h5 class='card-title'>
+                            <h5 class='card-title'>Bitstamp</h5>
+                            <h6 class='card-subtitle'>
                                 Bitstamp is a bitcoin exchange based in Luxembourg. It allows trading between USD currency and bitcoin cryptocurrency. It allows USD, EUR, bitcoin, litecoin, ethereum, ripple or bitcoin cash deposits and withdrawals.
-                            </h5>
-                            <h6 class='card-subtitle'>Hello</h6>
-                            <p id='bitstampPrice' class='card-text'>Description</p>
+                            </h6>
+                            <p id='bitstampPrice' class='card-text'>0</p>
                             <a href='#' class='card-link'>Download File</a>
                         </div>
                     </div>

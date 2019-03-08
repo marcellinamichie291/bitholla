@@ -9,6 +9,10 @@ const binance = require('node-binance-api')();
 // initialize bitmex websocket
 const BitMEXClient = require('bitmex-realtime-api');
 
+// initalize pusher websocket
+const Pusher = require('pusher-js/node');
+const pusher = new Pusher('de504dc5763aeef9ff52');
+
 // initialize csv-writer and create headers
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvWriter = createCsvWriter({
@@ -20,23 +24,6 @@ const csvWriter = createCsvWriter({
         {id: 'timestamp', title: 'TIMESTAMP'}
     ]
 });
-
-// // initalize pusher and subscribe to bitstamp websocket
-// const Pusher = require('pusher-js/node');
-// const pusher = new Pusher('de504dc5763aeef9ff52');
-// const channel = pusher.subscribe('live_trades');
-
-// // listen to bistamp websocket for trade events
-// channel.bind('trade', (data) => {
-//     csvWriter
-//         // record UTC time, price, and timestamp to price.csv
-//         .writeRecords([
-//             {'exchange': 'Bitstamp', 'utc': moment.utc(data.timestamp * 1000).format('MMM Do, h:mm:ss a'), 'price': data.price_str, 'timestamp': data.timestamp}
-//         ])
-//         .then(() => {
-//             console.log('Bitstamp data recorded');
-//         })
-// })
 
 server.listen(3000);
 
@@ -70,6 +57,20 @@ io.on('connection', (socket) => {
             .then(() => {
                 socket.emit('bitmex_change', data[data.length - 1].price.toFixed(2));
                 console.log('Bitmex data recorded');
+            })
+    })
+
+    // listen to bistamp websocket for trade events
+    const channel = pusher.subscribe('live_trades');
+    channel.bind('trade', (data) => {
+        csvWriter
+            // record UTC time, price, and timestamp to price.csv
+            .writeRecords([
+                {'exchange': 'Bitstamp', 'utc': moment.utc(data.timestamp * 1000).format('MMM Do, h:mm:ss a'), 'price': parseFloat(data.price_str).toFixed(2), 'timestamp': data.timestamp}
+            ])
+            .then(() => {
+                socket.emit('bitstamp_change', parseFloat(data.price_str).toFixed(2));
+                console.log('Bitstamp data recorded');
             })
     })
 

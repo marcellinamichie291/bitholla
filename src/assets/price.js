@@ -14,4 +14,8 @@ $(function() {
     socket.on('bitmex_change', (data) => {
         bitmexPrice.text(data);
     });
+
+    socket.on('bitstamp_change', (data) => {
+        bitstampPrice.text(data);
+    });
 });

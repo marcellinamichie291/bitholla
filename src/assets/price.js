@@ -8,6 +8,10 @@ $(function() {
     let bitstampPrice = $('#bitstampPrice');
 
     socket.on('binance_change', (data) => {
-        binancePrice.text(parseFloat(data));
-    })
+        binancePrice.text(data);
+    });
+
+    socket.on('bitmex_change', (data) => {
+        bitmexPrice.text(data);
+    });
 });

@@ -10,7 +10,7 @@ module.exports = {
 
         if(errors) {
             req.flash('error', errors);
-            return res.redirect(req.headers.referer);
+            return res.redirect('/');
         } else {
             return next();
         }

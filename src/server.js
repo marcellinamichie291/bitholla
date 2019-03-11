@@ -79,10 +79,6 @@ io.on('connection', (socket) => {
 
 })
 
-app.use('/', (req, res, next) => {
-    res.render('static/index');
-})
-
 server.on('listening', () => {
     console.log('server is listening for requests on port 3000');
 })

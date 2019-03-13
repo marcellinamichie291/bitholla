@@ -43,7 +43,7 @@ module.exports = {
             if (data.data) {
                 Prices.create({
                     exchange: 'BitMEX',
-                    utc: moment(data.data[0].timestamp).format('MMM Do, h:mm:ss a'),
+                    utc: moment(data.data[0].timestamp * 1000).format('MMM Do, h:mm:ss a'),
                     price: data.data[0].price.toFixed(2),
                     timestamp: moment(data.data[0].timestamp).valueOf(),
                     userId: user.id
@@ -77,6 +77,8 @@ module.exports = {
     },
 
     disconnect() {
+        // close all websockets
+
         binanceWs.close();
         binanceWs.on('close', function close() {
             console.log('binance websocket closed');

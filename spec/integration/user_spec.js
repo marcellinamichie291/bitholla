@@ -94,52 +94,81 @@ describe('routes : users', () => {
         })
     })
 
-    // describe('GET /users/download', () => {
-    //     this.user;
-    //     this.prices;
-    //     beforeEach((done) => {
-    //         User.create({
-    //             email: 'user@example.com',
-    //             password: 'password'
-    //         })
-    //         .then((user) => {
-    //             this.user = user
-    //             Prices.create({
-    //                 exchange: 'binance',
-    //                 utc: 'march 1',
-    //                 price: '23.24',
-    //                 timestamp: '123',
-    //                 userId: this.user.id
-    //             })
-    //             .then((prices) => {
-    //                 this.prices = prices;
-    //                 done();
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //                 done();
-    //             })
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //             done();
-    //         })
-    //     })
+    describe('GET /users/signout', () => {
+        beforeEach((done) => {
+            this.user;
+            User.create({
+                email: 'user@example.com',
+                password: 'password'
+            })
+            .then((user) => {
+                this.user = user
+                Prices.create({
+                    exchange: 'binance',
+                    utc: 'march 1',
+                    price: '23.24',
+                    timestamp: '123',
+                    userId: this.user.id
+                })
+                .then((prices) => {
+                    this.prices = prices;
+                    done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    done();
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+                done();
+            })
+        })
 
-    //     it('should return price.csv file with headers exchange, utc time, price, and timestamp', (done) => {
-    //         const options = {
-    //             url: `${base}download`,
-    //             req: {
-    //                 user: this.user
-    //             }
-    //         }
+        // it('should destroy all prices associated to user when user signs out', (done) => {
+        //     const options = {
+        //         url: `${base}signout`,
+        //         req: {
+        //             user: this.user
+        //         }
+        //     }
 
-    //         request.get(options,
-    //             (err, res, body) => {
-    //                 console.log(res);
-    //                 done();
-    //             })
-    //     })
-    // })
+        //     Prices.findAll({
+        //         where: {
+        //             userId: this.user.id
+        //         }
+        //     })
+        //     .then((prices) => {
+        //         // expect(prices).not.toBeNull();
+        //         // expect(prices.exchange).toBe(this.prices.exchange);
+        //         // expect(prices.utc).toBe(this.prices.utc);
+        //         // expect(prices.price).toBe(this.prices.price);
+        //         // expect(prices.timestamp).toBe(this.prices.timestamp);
+        //         // expect(prices.userId).toBe(this.user.id);
+
+        //         request.get(options,
+        //             (err, res, body) => {
+        //                 Prices.findAll({
+        //                     where: {
+        //                         userId: this.user.id
+        //                     }
+        //                 })
+        //                 .then((prices) => {
+        //                     expect(prices).toBeNull();
+        //                     done();
+        //                 })
+        //                 .catch((err) => {
+        //                     console.log(err);
+        //                     done();
+        //                 })
+        //             }
+        //         )
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //         done();
+        //     })
+        // })
+    })
 
 })

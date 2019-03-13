@@ -47,7 +47,9 @@ csvHolla is a Node application that listens to trades completed on Binance, BitM
 
 ## Using Application
 
-* The app does not record price change data unless a user is signed in
+* The app records data locally in **price.csv** as soon as it starts running, regardless of there being a user
+* **price.csv** is written over everytime the app is restarted
+* The app records data to a database that can be downloaded via link only when a user is signed in
 * To sign up for the app, click on the **Sign up** button in the navbar
 * After being signed in, the app will start recording data onto the database and associate them to the currently signed in user
 * To download price changes of all exchanges (Binance, BitMEX, Bitstamp), click on the **Download File** button located in the main jumbotron
@@ -65,6 +67,7 @@ At first, I created a **price.csv** file within the actual app and recorded pric
 
 * App still records data to a local file called price.csv regardless of there being a user or not
 * It continuously records until app is closed
+* Local price.csv is rewritten for every reset of app
 
 ###___Multiple users using the app at once___
 Currently, the app can only allow one user to use the app at a time. This is because the websocket connections are terminated after a user signs out. If userA was using the app while userB signs out, the app would disconnect from the websockets for both userA and userB, even though userA is still signed in. I think I can get around this if I was to have the app constantly connected to the websockets and only record the incoming data if a req.user exists. I tried to do this but was unable to stop recording even after a user logged out because req.user did not change.

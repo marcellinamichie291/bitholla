@@ -2,8 +2,8 @@ const WebSocket = require('ws');
 const moment = require('moment');
 const Prices = require('../db/models').Prices;
 
-let binanceWs;
-let bitmexWs;
+let binanceWsUser;
+let bitmexWsUser;
 
 // initalize pusher websocket
 const Pusher = require('pusher-js/node');
@@ -12,11 +12,11 @@ const pusher = new Pusher('de504dc5763aeef9ff52');
 module.exports = {
     connect(user) {
         // binance websocket connected and listening to trades
-        binanceWs = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@aggTrade');
-        binanceWs.on('open', function open() {
-            console.log('binance websocket connected');
+        binanceWsUser = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@aggTrade');
+        binanceWsUser.on('open', function open() {
+            console.log('binance recording for user');
         })
-        binanceWs.on('message', (data) => {
+        binanceWsUser.on('message', (data) => {
             data = JSON.parse(data);
             Prices.create({
                 exchange: 'Binance',
@@ -25,20 +25,18 @@ module.exports = {
                 timestamp: data['E'],
                 userId: user.id
             })
-            .then((price) => {
-                console.log('binance trade recorded');
-            })
+            .then((price) => {})
             .catch((err) => {
                 console.log(err);
             })
         })
 
         // bitmex websocket connected and listening to trades
-        bitmexWs = new WebSocket('wss://www.bitmex.com/realtime?subscribe=trade:XBTUSD');
-        bitmexWs.on('open', function open() {
-            console.log('bitmex websocket connected');
+        bitmexWsUser = new WebSocket('wss://www.bitmex.com/realtime?subscribe=trade:XBTUSD');
+        bitmexWsUser.on('open', function open() {
+            console.log('bitmex recording for user');
         })
-        bitmexWs.on('message', (data) => {
+        bitmexWsUser.on('message', (data) => {
             data = JSON.parse(data);
             if (data.data) {
                 Prices.create({
@@ -48,9 +46,7 @@ module.exports = {
                     timestamp: moment(data.data[0].timestamp).valueOf(),
                     userId: user.id
                 })
-                .then((price) => {
-                    console.log('bitmex trade recorded');
-                })
+                .then((price) => {})
                 .catch((err) => {
                     console.log(err);
                 })
@@ -59,6 +55,9 @@ module.exports = {
 
         // listen to bistamp websocket for trade events
         const channel = pusher.subscribe('live_trades');
+        channel.bind('pusher:subscription_succeeded', function() {
+            console.log('bitstamp recording for user');
+        })
         channel.bind('trade', (data) => {
             Prices.create({
                 exchange: 'Bitstamp',
@@ -67,9 +66,7 @@ module.exports = {
                 timestamp: data.timestamp,
                 userId: user.id
             })
-            .then((price) => {
-                console.log('bitstamp trade recorded');
-            })
+            .then((price) => {})
             .catch((err) => {
                 console.log(err);
             })
@@ -90,5 +87,7 @@ module.exports = {
         })
 
         pusher.unsubscribe('live_trades');
+        console.log('bitstamp websocket closed');
+
     }
 }

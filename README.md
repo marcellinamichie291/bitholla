@@ -1,6 +1,6 @@
 ## csvHolla
 
-csvHolla is a Node application that listens to trades completed on Binance, BitMEX, and Bitstamp. When detected, csvHolla collects the exchange name, UTC time of completion, timestamp, and price of the trade and records this data in a database under the 'Prices' table. Users are able to download the data collected as a .csv file.
+csvHolla is a Node application that listens to trades completed on Binance, BitMEX, and Bitstamp. When detected, csvHolla collects the exchange name, UTC time of completion, timestamp, and price of the trade and records this data in a database under the 'Prices' table. Users are able to download the data collected as a .csv file. The app also records price data locally in a file called price.csv.
 
 ## Links
 
@@ -38,6 +38,7 @@ csvHolla is a Node application that listens to trades completed on Binance, BitM
 * Run `npm install` to install all dependencies
 * Run `npm start`
 * Open **http://localhost:3000/** in browser
+* **To end app**: press `cmd + c` on mac or `ctrl + c` on windows
 
 ## Running Tests
 
@@ -62,6 +63,12 @@ I had to figure out a way to record price changes in realtime from three differe
 ###___Recording data for individual users___
 At first, I created a **price.csv** file within the actual app and recorded price changes directly to the file using the csv-writer library. While this worked, I realized that I would run into problems if two different users were to use the application. The data was not being associated to a user. Therefore, a user wouldn't be able to get the price data from his or her own session but instead get the data that started being recorded whenever the first user opened up the application. To get around this, I recorded the data in a PostgreSQL database so each data instance can have a userId value that associated it with a certain user. This way, multiple users can be using the app and obtain price change data that started recording only when he or she signed in. PostgreSQL also allows me to then extract the data that is relevant to the user that is downloading the .csv file. 
 
+* App still records data to a local file called price.csv regardless of there being a user or not
+* It continuously records until app is closed
+
+###___Multiple users using the app at once___
+Currently, the app can only allow one user to use the app at a time. This is because the websocket connections are terminated after a user signs out. If userA was using the app while userB signs out, the app would disconnect from the websockets for both userA and userB, even though userA is still signed in. I think I can get around this if I was to have the app constantly connected to the websockets and only record the incoming data if a req.user exists. I tried to do this but was unable to stop recording even after a user logged out because req.user did not change.
+
 ## Things I Would Compelete With More Time
 
 ###___Tests___
@@ -78,3 +85,6 @@ Currently, the app only allows users to obtain the data that was recorded throug
 
 ###___Improve UI___
 At this point, the app's ui is very simple and does not show much information. I would like to include a graph that shows the price changes of their current session. I would also like to give instructions on how to use the app within the ui. Also, the prices in the UI start at 0 until a change is recorded. I would initially show the price by using an API call. 
+
+###___Refactoring Code___
+Right now, I am using two separate websocket connections (one for the price change ticker in the view and one for recording price changes). I would like to refactor the code so only one connection is being made in the app. I would also move the websocket code to a separate file. 

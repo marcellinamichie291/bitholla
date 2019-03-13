@@ -59,15 +59,15 @@ csvHolla is a Node application that listens to trades completed on Binance, BitM
 ###___Listening to price changes___
 I had to figure out a way to record price changes in realtime from three different exchanges (Binance, BitMEX, Bitstamp). I decided that connecting to each exchange's websocket was the best way to continuously record the realtime changes. For Binance and BitMEX, I used the ws npm package which allowed me to connect to their websocket servers. I then listened to completed trades for each exchange. The most recent price that the trades were completed in determined the current price of Bitcoin for each exchange. Bitstamp uses Pusher.js as a websocket connection. I also listened to trades completed for Bitstamp and recorded the price of each trade to find the realtime price of Bitcoin in the exchange.
 
-###___Recording Data___
-At first, I created a **price.csv** file within the actual app and recorded price changes directly to the file using the csv-writer library. While this worked, I realized that I would run into problems if two different users were using the application. The data was not being associated to a user. Therefore, a user wouldn't be able to get the price data from his or her own session but instead get the data that started being recorded whenever the first user opened up the application. To get around this, I recorded the data in a PostgreSQL database so each data instance can have a userId value that associated it with a certain user. This way, multiple users can be using the app and obtain price change data that started recording only when he or she signed in. PostgreSQL also allows me to then extract the data that is relevant to the user that is downloading the .csv file. 
+###___Recording data for individual users___
+At first, I created a **price.csv** file within the actual app and recorded price changes directly to the file using the csv-writer library. While this worked, I realized that I would run into problems if two different users were to use the application. The data was not being associated to a user. Therefore, a user wouldn't be able to get the price data from his or her own session but instead get the data that started being recorded whenever the first user opened up the application. To get around this, I recorded the data in a PostgreSQL database so each data instance can have a userId value that associated it with a certain user. This way, multiple users can be using the app and obtain price change data that started recording only when he or she signed in. PostgreSQL also allows me to then extract the data that is relevant to the user that is downloading the .csv file. 
 
 ## Things I Would Compelete With More Time
 
 ###___Tests___
 While I wrote unit and integration tests for database models and **GET** urls, I was not able to find a way to test **POST** links that downloaded .csv files. If given more time, I would find out a way to test these links and make sure that the downloaded .csv file returns expected values. 
 
-###___Show user how long their session has been going on___
+###___Show users how long their session has been going on___
 In the view, I would create a timer that starts whenever the user signs in to show the user how long the app has been recording prices changes. This way, the user can see the exact amount of time the app has been recording data and can download the .csv file with more information.
 
 ###___Allow reset of recording data___
@@ -76,4 +76,5 @@ Currently the app only allows the user to empty their price change data table by
 ###___Allow users to download .csv file for a given timeframe___
 Currently, the app only allows users to obtain the data that was recorded throughout his or her session. I would allow users to download data that was recorded within the last hour, last 30 minutes, last 5 minutes, etc.
 
-
+###___Improve UI___
+At this point, the app's ui is very simple and does not show much information. I would like to include a graph that shows the price changes of their current session. I would also like to give instructions on how to use the app within the ui. Also, the prices in the UI start at 0 until a change is recorded. I would initially show the price by using an API call. 

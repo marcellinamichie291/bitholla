@@ -20,7 +20,7 @@ module.exports = {
             data = JSON.parse(data);
             Prices.create({
                 exchange: 'Binance',
-                utc: moment.utc(data.E * 1000).format('MMM Do, h:mm:ss a'),
+                utc: moment.utc(data.E).format('MMM Do, h:mm:ss a'),
                 price: parseFloat(data['p']).toFixed(2),
                 timestamp: data['E'],
                 userId: user.id
@@ -43,7 +43,7 @@ module.exports = {
             if (data.data) {
                 Prices.create({
                     exchange: 'BitMEX',
-                    utc: moment(data.data[0].timestamp * 1000).format('MMM Do, h:mm:ss a'),
+                    utc: moment.utc(data.data[0].timestamp).format('MMM Do, h:mm:ss a'),
                     price: data.data[0].price.toFixed(2),
                     timestamp: moment(data.data[0].timestamp).valueOf(),
                     userId: user.id

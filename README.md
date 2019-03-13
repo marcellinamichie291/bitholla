@@ -9,8 +9,8 @@ csvHolla is a Node application that listens to trades completed on Binance, BitM
 ## Built With
 
 * [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
-* [Bitmex-realtime-api](https://www.npmjs.com/package/bitmex-realtime-api)
 * [Body-parser](https://www.npmjs.com/package/body-parser)
+* [Csv-writer](https://www.npmjs.com/package/csv-writer)
 * [Dotenv](https://www.npmjs.com/package/dotenv)
 * [EJS](https://www.npmjs.com/package/ejs)
 * [Express](https://www.npmjs.com/package/express)
@@ -19,7 +19,6 @@ csvHolla is a Node application that listens to trades completed on Binance, BitM
 * [Express-validator](https://www.npmjs.com/package/express-validator)
 * [Json2Csv](https://www.npmjs.com/package/json2csv)
 * [Moment](https://www.npmjs.com/package/moment)
-* [Node-binance-api](https://www.npmjs.com/package/node-binance-api)
 * [Passport](https://www.npmjs.com/package/passport)
 * [Passport-local](https://www.npmjs.com/package/passport-local)
 * [Postgres](https://www.npmjs.com/package/pg)

@@ -4,7 +4,8 @@
   "description": "Node application that gets and collect the price of Bitcoin from Binance, Bitmex, and Bitstamp and stores them in a csv file",
   "main": "src/server.js",
   "scripts": {
-    "test": "export NODE_ENV=test && jasmine"
+    "test": "export NODE_ENV=test && jasmine",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,6 @@
     "bcryptjs": "^2.4.3",
     "bitmex-realtime-api": "^0.4.0",
     "body-parser": "^1.18.3",
-    "csv-writer": "^1.2.0",
     "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
